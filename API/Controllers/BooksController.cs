@@ -15,14 +15,14 @@ namespace API.Controllers
             _context = context;
         }
 
-        // GET: api/books
+        
         [HttpGet]
         public ActionResult<IEnumerable<Book>> GetBooks()
         {
             return Ok(_context.Books.ToList());
         }
 
-        // POST: api/books
+        
         [HttpPost]
         public ActionResult<Book> AddBook(Book book)
         {
@@ -35,6 +35,27 @@ namespace API.Controllers
             }
 
             return BadRequest("Error adding the book.");
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteBook(int id)
+        {
+            var book = _context.Books.Find(id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            _context.Books.Remove(book); 
+            var success = _context.SaveChanges() > 0; 
+
+            if (success)
+            {
+                return NoContent(); 
+            }
+
+            return BadRequest("Error deleting the book."); 
         }
     }
 }
